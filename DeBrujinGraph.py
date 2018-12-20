@@ -2,32 +2,56 @@ from random import randrange
 
 # class DeBrujinGraph:
 
-#     def __init__(self, nodes: Iterable[str], k=21):
-#         pass # initialise la structure de données
+    def __init__(self, nodes: Iterable[str], k=21):
+        self._map = self.HashMapDeBrujin(len(nodes))
+        for i in range(0, len(nodes), k):
+            self._map[nodes[i:k+1]] = nodes[i:k+1]
 
-#     def __contains__(self, N: str) -> bool:
-#         pass # détermine si le graphe de Brujin contient le noeud N
+    def __contains__(self, N: str) -> bool:
+        try:
+            self._map[N]
+            return True
+        except KeyError:
+            return false
 
-#     def __iter__(self) -> Iterable[str]:
-#         return self.nodes() # retourne un itérable sur les noeuds du graphe
+        
+    def __iter__(self) -> Iterable[str]:
+        return self.nodes() # retourne un itérable sur les noeuds du graphe
 
-#     def load_factor() -> float:
-#         pass # calcule le facteur de charge de la table de hachage sous-jacente
+    def load_factor() -> float:
+        return(self._map._n / self._map._mask)
 
-#     def add(self, N: str):
-#         pass # ajoute le noeud N au graphe
+    def add(self, N: str):
+        self._map[N] = N
 
-#     def remove(self, N: str):
-#         pass # enlève le noeud N du graphe
+    def remove(self, N: str):
+        del self._map[N]
 
-#     def nodes(self) -> Iterable[str]:
-#         pass # retourne un itérable sur les noeuds du graphe
+    def nodes(self) -> Iterable[str]:
+        i = 0
+        while(i < self._map._mask)
+            try:
+                yield(self._map[i])
+            except KeyError:
+                i +=  0
 
-#     def predecessors(self, N: str) -> Iterable[str]:
-#         pass # retourne tous les prédécesseur du noeud N
+    def predecessors(self, N: str) -> Iterable[str]:
+        pred_list = []
+        options = {1: A, 2: C, 3: G, 4: T}
+        for i in range(1, 5):
+            try:
+                if options[i] != N[:1]:
+                    pred_list += self._map[options[i] + N[1:]]
+            except KeyError:
 
-#     def successors(self, N: str) -> Iterable[str]:
-#         pass # retourne tous les successeurs du noeud N
+    def successors(self, N: str) -> Iterable[str]:
+        succ_list = []
+        options = {1: A, 2: C, 3: G, 4: T}
+        for i in range(len(options)):
+            try:
+                if(options[i] != N[-1:]):
+                    succ_list += self._map[[N:-1] + options[i]]
+            except KeyError:
 
 '''
 Implementation de hasMap avec sondage lineaire
@@ -115,9 +139,9 @@ class HashMapDeBrujin:
         # Fonction de Hachage MAD
         return(k * self._scale + self._shift) % self._prime % self._mask
 
-    def _secondaryHashFunction(self, key, firstHash):
-        value = self._gethashkey(key)
-        return (firstHash + (abs(self._mid_prime - value) % self._mid_prime)) % self._mask 
+    def _secondaryHashFunction(self, key, firstAvail):
+        return((firstAvail+1) % self._mask)
+
 
     def __len__(self):
         return self._n
@@ -154,7 +178,7 @@ class HashMapDeBrujin:
             else:
                 #Utilisation de Hachage Double pour trouver firstAvail
                 firstAvail = self._secondaryHashFunction(key, firstAvail)
-                print(firstAvail)
+                #print(firstAvail)
 
     def __delitem__(self, key):
         i = self._hashFunction(key)
@@ -191,8 +215,8 @@ class HashMapDeBrujin:
                 yield (self._data[i].key(),self._data[i].value())
 
 if __name__ == '__main__':
-    for i in range(100000):
-        hashmap = HashMapDeBrujin(10, 9)
+    for i in range(100):
+        hashmap = HashMapDeBrujin(10, 47)
         hashmap['ACGT'] = 'ACGT'
         hashmap['AA'] = '1'
         hashmap['AC'] = '2'
@@ -204,6 +228,7 @@ if __name__ == '__main__':
         hashmap['AAT'] = '8'
         hashmap.test()
         print("===========================")
+    del hashmap['ACGT']
     hashmap.test()
     # VERIFIER BENCHMARK AVEC RAND SCALE
 
